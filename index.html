@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #15161d, #764ba2);
+      padding: 30px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #777;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 13px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .password-box {
+      position: relative;
+    }
+
+    .password-box input {
+      padding-right: 80px;
+    }
+
+    .show-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #667eea;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .strength {
+      height: 6px;
+      width: 100%;
+      background: #ddd;
+      border-radius: 5px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .strength-bar {
+      height: 100%;
+      width: 0%;
+      transition: 0.3s;
+    }
+
+    .options {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .option label {
+      margin: 0;
+      font-weight: normal;
+      cursor: pointer;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    button {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .register-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .clear-btn {
+      background: #eee;
+      color: #333;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    .message {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .success {
+      display: block;
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .error {
+      display: block;
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>Student Registration</h1>
+  <p class="subtitle">Create your student account</p>
+
+  <form id="registrationForm">
+
+    <div class="form-group">
+      <label for="fullname">Full Name</label>
+      <input type="text" id="fullname" placeholder="Enter your full name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" placeholder="example@email.com" required>
+    </div>
+
+    <div class="form-group">
+      <label for="studentid">Student ID</label>
+      <input type="text" id="studentid" placeholder="Enter your student ID" required>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+
+      <div class="password-box">
+        <input type="password" id="password"
+               placeholder="Create a password"
+               required>
+
+        <button type="button"
+                class="show-password"
+                onclick="togglePassword()">
+          Show
+        </button>
+      </div>
+
+      <div class="strength">
+        <div class="strength-bar" id="strengthBar"></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="age">Age</label>
+      <input type="number" id="age" min="13" max="100"
+             placeholder="Enter your age" required>
+    </div>
+
+    <div class="form-group">
+
+      <label>Gender</label>
+
+      <div class="options">
+
+        <div class="option">
+          <input type="radio"
+                 id="male"
+                 name="gender"
+                 value="Male"
+                 required>
+
+          <label for="male">Male</label>
+        </div>
+
+        <div class="option">
+          <input type="radio"
+                 id="female"
+                 name="gender"
+                 value="Female">
+
+          <label for="female">Female</label>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Hobbies</label>
+
+      <div class="options">
+
+        <div class="option">
+          <input type="checkbox"
+                 id="gaming"
+                 value="Gaming">
+
+          <label for="gaming">Gaming</label>
+        </div>
+
+        <div class="option">
+          <input type="checkbox"
+                 id="music"
+                 value="Music">
+
+          <label for="music">Music</label>
+        </div>
+
+        <div class="option">
+          <input type="checkbox"
+                 id="programming"
+                 value="Programming">
+
+          <label for="programming">Programming</label>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="form-group">
+
+      <label for="course">Course</label>
+
+      <select id="course" required>
+
+        <option value="">Select your course</option>
+        <option value="BSIT">BSIT</option>
+        <option value="BSCS">BSCS</option>
+        <option value="BSIS">BSIS</option>
+        <x></x>
+
+      </select>
+
+    </div>
+
+    <div class="form-group">
+
+      <label for="message">Comments</label>
+
+      <textarea id="message"
+                rows="4"
+                placeholder="Tell us something about yourself..."></textarea>
+
+    </div>
+
+    <div class="buttons">
+
+      <button type="submit" class="register-btn">
+        Register
+      </button>
+
+      <button type="reset" class="clear-btn">
+        Clear
+      </button>
+
+    </div>
+
+  </form>
+
+  <div id="resultMessage" class="message"></div>
+
+</div>
+
+
+<script>
+
+  // SHOW / HIDE PASSWORD
+  function togglePassword() {
+
+    const password = document.getElementById("password");
+    const button = document.querySelector(".show-password");
+
+    if (password.type === "password") {
+
+      password.type = "text";
+      button.textContent = "Hide";
+
+    } else {
+
+      password.type = "password";
+      button.textContent = "Show";
+
+    }
+  }
+
+
+  // PASSWORD STRENGTH
+  document.getElementById("password").addEventListener("input", function () {
+
+    const password = this.value;
+    const bar = document.getElementById("strengthBar");
+
+    let strength = 0;
+
+    if (password.length >= 6) {
+      strength++;
+    }
+
+    if (/[A-Z]/.test(password)) {
+      strength++;
+    }
+
+    if (/[0-9]/.test(password)) {
+      strength++;
+    }
+
+    if (/[^A-Za-z0-9]/.test(password)) {
+      strength++;
+    }
+
+    if (strength === 0) {
+      bar.style.width = "0%";
+    }
+
+    else if (strength === 1) {
+      bar.style.width = "25%";
+    }
+
+    else if (strength === 2) {
+      bar.style.width = "50%";
+    }
+
+    else if (strength === 3) {
+      bar.style.width = "75%";
+    }
+
+    else {
+      bar.style.width = "100%";
+    }
+
+  });
+
+
+  // FORM SUBMISSION
+  document.getElementById("registrationForm")
+    .addEventListener("submit", function(event) {
+
+      event.preventDefault();
+
+      const name =
+        document.getElementById("fullname").value;
+
+      const password =
+        document.getElementById("password").value;
+
+      const age =
+        document.getElementById("age").value;
+
+      const course =
+        document.getElementById("course").value;
+
+      const result =
+        document.getElementById("resultMessage");
+
+
+      if (password.length < 6) {
+
+        result.textContent =
+          "Password must be at least 6 characters.";
+
+        result.className = "message error";
+
+        return;
+      }
+
+
+      if (age < 13) {
+
+        result.textContent =
+          "Age must be at least 13.";
+
+        result.className = "message error";
+
+        return;
+      }
+
+
+      result.textContent =
+        "Registration successful! Welcome, " +
+        name + "! You selected " + course + ".";
+
+      result.className = "message success";
+
+    });
+
+
+  // CLEAR SUCCESS MESSAGE
+  document.getElementById("registrationForm")
+    .addEventListener("reset", function() {
+
+      setTimeout(function() {
+
+        document.getElementById("resultMessage").className =
+          "message";
+
+        document.getElementById("strengthBar").style.width =
+          "0%";
+
+      }, 10);
+
+    });
+
+</script>
+
+</body>
+</html>
+```
